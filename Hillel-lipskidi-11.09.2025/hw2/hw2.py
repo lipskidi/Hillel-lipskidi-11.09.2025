@@ -1,65 +1,44 @@
 import random
-from typing import List, Optional
 
 class Car:
     def __init__(self, model: str, color: str):
-        self.fuel: int = random.randrange(0, 9)
-        self.trip_distance: int = 0
-        self.model: str = model
-        self.color: str = color
+        self.fuel = random.randrange(0, 9)
+        self.trip_distance = 0
+        self.model = model
+        self.color = color
 
-    def move(self, distance: int) -> int:
+    def move(self, distance: int):
+        if distance > self.fuel:
+            distance = self.fuel
 
-        if distance <= 0 or self.fuel <= 0:
-            return 0
-        actual = min(distance, self.fuel)
-        self.trip_distance += actual
-        self.fuel -= actual
-        return actual
+        self.trip_distance += distance
+        self.fuel -= distance
 
-def race_simulation(desired_dist: int, seed: Optional[int] = None) -> None:
-    if seed is not None:
-        random.seed(seed)
 
-    cars: List[Car] = [
-        Car("Toyota", "Red"),
-        Car("Honda", "Blue"),
-        Car("Nissan", "Black"),
-    ]
+def race_simulation(desired_dist: int):
+    car1 = Car("Toyota", "Red")
+    car2 = Car("Honda", "Blue")
+    car3 = Car("Nissan", "Yellow")
 
-    winner: Optional[Car] = None
-    max_rounds = 10000
-    round_count = 0
+    cars = [car1, car2, car3]
+
+    winner = None
 
     while True:
-        round_count += 1
-        if round_count > max_rounds:
-            print("Досягнуто максимуму ітерацій — зупиняю гонку як страховку.")
-            break
-
-        moved_any = False
-
         for car in cars:
-            step = random.randrange(0, 9)  # 0..8
-            moved = car.move(step)
-            if moved > 0:
-                moved_any = True
-
+            step = random.randrange(0, 9)
+            car.move(step)
             if car.trip_distance >= desired_dist:
                 winner = car
                 break
 
         if winner is not None:
-            print(f"Переміг автомобіль {winner.model} — пройшов {winner.trip_distance} одиниць.")
             break
 
-        if not moved_any:
-            print("Жоден автомобіль не може більше рухатися (немає палива або ходи 0). Гонка зупинена.")
-            break
+    print(f"Переміг автомобіль {winner.model} з дистанцією {winner.trip_distance}")
 
-    print("\nПідсумки гонки:")
     for car in cars:
-        print(f"{car.model} ({car.color}) — пройшов: {car.trip_distance}, паливо: {car.fuel}")
+        print(f"{car.model} ({car.color}): проїхав {car.trip_distance}, залишилось палива {car.fuel}")
 
 if __name__ == "__main__":
-    race_simulation(desired_dist=50, seed=42)
+    race_simulation(2)
