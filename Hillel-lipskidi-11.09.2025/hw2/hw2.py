@@ -41,4 +41,4 @@ def race_simulation(desired_dist: int):
         print(f"{car.model} ({car.color}): проїхав {car.trip_distance}, залишилось палива {car.fuel}")
 
 if __name__ == "__main__":
-    race_simulation(2)
+    race_simulation(8)
